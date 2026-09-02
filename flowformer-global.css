@@ -1,0 +1,290 @@
+html.ff-vorabcheck-loading [sf="flowformer-vorabcheck"]{
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #FFFFFF inset !important;
+  box-shadow: 0 0 0 1000px #FFFFFF inset !important;
+  -webkit-text-fill-color: inherit !important;
+  caret-color: inherit !important;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+input:-moz-autofill,
+textarea:-moz-autofill,
+select:-moz-autofill {
+  box-shadow: 0 0 0 1000px #FFFFFF inset !important;
+  -moz-text-fill-color: inherit !important;
+}
+
+.landingpage_leistungen_slider{
+  overscroll-behavior-y: none;
+}
+
+.ff-submit-notice {
+  display: none;
+  background: var(--_primitives---error--red-10);
+  border: 1px solid var(--_primitives---error--red-20);
+  border-radius: var(--_ui-styles---radius--small);
+  padding: 18px 20px;
+  color: var(--_primitives---error--red-100);
+}
+
+.ff-submit-notice.is-open { display: block; }
+.ff-submit-notice * { color: inherit; }
+.ff-submit-notice a { color: inherit; text-decoration: underline; font-weight: 600; }
+
+
+
+/* ==========================================================================
+   FlowFormer – Forms (moved from Webflow before </body>)
+   ========================================================================= */
+
+/* Rot erst NACH "Weiter"-Versuch (ff-show-errors) – nur pro Feldwrapper */
+[sf-step].ff-show-errors :is(.form_field-wrapper, .multi-form18_field-wrapper).ff-has-error .form_input,
+[sf-step].ff-show-errors :is(.form_field-wrapper, .multi-form18_field-wrapper).ff-has-error textarea,
+[sf-step].ff-show-errors :is(.form_field-wrapper, .multi-form18_field-wrapper).ff-has-error select {
+  border-color: #E5484D !important;
+  box-shadow: 0 0 0 1px rgba(229, 72, 77, 0.12) !important;
+}
+
+/* FIX: :has() nur auf Feld-Wrapper, nicht auf den großen form_field-wrapper */
+[sf-step].ff-show-errors .multi-form18_field-wrapper:has(.form-error-text[style*="display: block"]) .form_input,
+[sf-step].ff-show-errors .multi-form18_field-wrapper:has(.form-error-text[style*="display: block"]) textarea,
+[sf-step].ff-show-errors .multi-form18_field-wrapper:has(.form-error-text[style*="display: block"]) select {
+  border-color: #E5484D !important;
+  box-shadow: 0 0 0 1px rgba(229, 72, 77, 0.12) !important;
+}
+
+/* Datenschutz-Checkbox: nur das Kästchen rot */
+[sf-step].ff-show-errors .form_field-wrapper.ff-has-error .form_checkbox-icon {
+  border: 1px solid #E5484D !important;
+  box-shadow: 0 0 0 1px rgba(229, 72, 77, 0.12) !important;
+}
+
+/* "Etwas anderes" Wrapper standardmäßig aus (wird per JS bei Bedarf eingeblendet) */
+[data-ff-goal-other-wrapper="true"] { display: none; }
+
+/* (ALT) Wrapper muss "Anker" für Overlay sein */
+[sf="flowformer-vorabcheck"] { position: relative; isolation: isolate; }
+
+/* (ALT) Overlay (standard: unsichtbar) */
+[sf="flowformer-vorabcheck"]::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:#fff;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 220ms ease;
+  z-index:9999;
+}
+
+/* (ALT) Beim Reset kurz sichtbar */
+[sf="flowformer-vorabcheck"].ff-resetting::after{
+  opacity:1;
+}
+
+/* =================================
+   DIREKTER KONTAKT – Error States
+   (robust: unabhängig von Input-Klassen)
+================================= */
+
+.contact-form_step.ff-show-errors
+  .contactform_field-wrapper.ff-has-error
+  :is(input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]),
+      textarea,
+      select) {
+  border-color: #E5484D !important;
+  box-shadow: 0 0 0 1px rgba(229, 72, 77, 0.12) !important;
+}
+
+/* Checkbox: nur Icon */
+.contact-form_step.ff-show-errors
+  .contactform_field-wrapper.ff-has-error
+  .form_checkbox-icon {
+  border: 1px solid #E5484D !important;
+  box-shadow: 0 0 0 1px rgba(229, 72, 77, 0.12) !important;
+}
+
+/* Vorab-Check: Checkbox-Karten — Hintergrund und Border bleiben, wenn ausgewählt */
+[sf="flowformer-vorabcheck"] .goals-group .checkbox:has(input[type="checkbox"]:checked) {
+  background-color: var(--_primitives---primary--corpo-50-10);
+  border-color: #2e394a !important; /* Gray 90 */
+}
+
+/* Vorab-Check: Checkbox-Karten — Hover auf Touch-Geräten auf Normalzustand zurücksetzen, wenn nicht ausgewählt */
+@media (hover: none), (pointer: coarse) {
+  [sf="flowformer-vorabcheck"] .goals-group .checkbox:hover:not(:has(input[type="checkbox"]:checked)) {
+    background-color: var(--_primitives---basic-colors--lite);
+  }
+}
+
+/* Disabled-Look */
+[sf="flowformer-vorabcheck"] .goals-group .checkbox:has(input[type="checkbox"]:disabled) {
+  border-color: rgba(46,57,74,0.25) !important;
+}
+
+/* Step 1 Ziele: Disabled-Look NUR für übrige Optionen (nicht die ausgewählten) */
+[sf="flowformer-vorabcheck"] .goals-group .checkbox:has(input[type="checkbox"]:disabled):not(:has(input[type="checkbox"]:checked)) {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Cursor auch auf Label/Text innerhalb der disabled Optionen */
+[sf="flowformer-vorabcheck"] .goals-group .checkbox:has(input[type="checkbox"]:disabled):not(:has(input[type="checkbox"]:checked)) * {
+  cursor: not-allowed;
+}
+
+/* Sicherheitsnetz: ausgewählte Optionen nie dimmen */
+[sf="flowformer-vorabcheck"] .goals-group .checkbox:has(input[type="checkbox"]:checked) {
+  opacity: 1 !important;
+}
+
+/* Counter nie dimmen */
+[sf="flowformer-vorabcheck"] [data-ff-goal-counter="true"],
+[sf="flowformer-vorabcheck"] .text-color-gray-75 {
+  opacity: 1 !important;
+}
+
+/* FlowFormer – Dropdown Placeholder Farbe */
+select.w-select {
+  color: var(--_primitives---brand--gray-30);
+}
+select.w-select.ff-has-value {
+  color: var(--_primitives---basic-colors--neutral-darkest);
+}
+
+/* =================================
+   DIREKTER KONTAKT – Error States
+   (nur Contact-Form, nicht Multistep)
+================================= */
+
+.contact-form_step.ff-show-errors
+  .contactform_field-wrapper.ff-has-error
+  input,
+.contact-form_step.ff-show-errors
+  .contactform_field-wrapper.ff-has-error
+  textarea,
+.contact-form_step.ff-show-errors
+  .contactform_field-wrapper.ff-has-error
+  select {
+  border-color: #E5484D !important;
+  box-shadow: 0 0 0 1px rgba(229, 72, 77, 0.12) !important;
+}
+
+/* Checkbox: nur das Icon rot (Wrapper ist bei dir .contact-form_checkbox) */
+.contact-form_step.ff-show-errors
+  .contact-form_checkbox.ff-has-error
+  .form_checkbox-icon {
+  border: 1px solid #E5484D !important;
+  box-shadow: 0 0 0 1px rgba(229, 72, 77, 0.12) !important;
+}
+
+
+
+/* ===== FlowFormer – Focus-Ring nur für Tastatur (iPhone Ring weg) ===== */
+html.ff-pointer .w-tab-link:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* wenn Browser :focus-visible kann -> Tastatur darf Ring sehen */
+.w-tab-link:focus-visible {
+  outline: auto;
+}
+
+@media (max-width: 767px) {
+  #forms-anchor { scroll-margin-top: 60px; }
+}
+
+/* ==========================================================================
+   FLOWFORMER – Scoped Submit Notices
+   Fix: Vorab-Check-Fail-State darf die Notice im Direkter-Kontakt-Tab nicht öffnen.
+   Greift gezielt auf #contact-form und überschreibt die breite .ff-submit-notice-Regel.
+   ========================================================================= */
+
+[sf="flowformer-vorabcheck"][data-ff-submit-failed="1"] #contact-form [data-ff-submit-notice="direct-contact"].ff-submit-notice {
+  display: none !important;
+}
+
+[sf="flowformer-vorabcheck"][data-ff-submit-failed="1"] [data-ff-submit-notice="vorabcheck"].ff-submit-notice {
+  display: block !important;
+}
+
+/* ==========================================================================
+   Vorab-Check – Ziele: deaktivierter Weiter-Button
+   ========================================================================= */
+
+[sf="flowformer-vorabcheck"] [data-ff-goal-next="true"].is-disabled,
+[sf="flowformer-vorabcheck"] [data-ff-goal-next="true"][disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   FLOWFORMER – Navigation V2: Overlay und stabiler Scrollbar-Platz
+   Aus Webflow → Seite „Übersicht“ → Custom Code im <head>
+   ========================================================================= */
+
+@media screen and (max-width: 991px) {
+  .navbar_overlay {
+    display: none !important;
+    position: fixed;
+    inset: 70px 0 0;
+    width: 100%;
+    background-color: transparent !important;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 60ms linear;
+  }
+
+  .navbar_overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(18, 19, 21, 0.5);
+    pointer-events: none;
+  }
+
+  .navbar.ff-overlay-mounted
+    .navbar_overlay {
+    display: block !important;
+  }
+
+  .navbar.ff-overlay-visible
+    .navbar_overlay {
+    opacity: 1;
+    pointer-events: auto;
+    transition-duration: 100ms;
+    transition-timing-function: ease-out;
+  }
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+
+@media screen and (min-width: 992px) {
+  .navbar_overlay {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 991px)
+  and (prefers-reduced-motion: reduce) {
+  .navbar_overlay,
+  .navbar.ff-overlay-visible
+    .navbar_overlay {
+    transition: none;
+  }
+}
