@@ -442,8 +442,24 @@
             return;
           }
 
+          link.setAttribute(
+            "fs-scrolldisable-element",
+            "enable"
+          );
+
+          if (
+            typeof window
+              .__ffNav04Trace ===
+                "function"
+          ) {
+            window.__ffNav04Trace(
+              "2 menu capture",
+              event,
+              link
+            );
+          }
+
           beginClose(false);
-          button.click();
         },
         true
       );
@@ -740,5 +756,336 @@
     });
 
     readState("Start");
+  });
+})();
+
+
+/*
+ * NAV-04 scroll-lock event diagnostics.
+ * Active only with: ?ff-nav-debug=1
+ * Temporary test code; remove after diagnosis.
+ */
+(() => {
+  const enabled =
+    new URLSearchParams(
+      window.location.search
+    ).get("ff-nav-debug") === "1";
+
+  if (!enabled) return;
+
+  window.Webflow = window.Webflow || [];
+
+  window.Webflow.push(() => {
+    const navbar =
+      document.querySelector(".navbar");
+
+    const menu =
+      navbar
+        ? navbar.querySelector(
+            ".navbar_menu, .w-nav-menu"
+          )
+        : null;
+
+    const button =
+      navbar
+        ? navbar.querySelector(
+            ".navbar_menu-button, .w-nav-button"
+          )
+        : null;
+
+    if (!navbar || !menu || !button) {
+      return;
+    }
+
+    const panel =
+      document.createElement("pre");
+
+    panel.id = "ff-nav-04-debug";
+
+    Object.assign(panel.style, {
+      position: "fixed",
+      top: "4px",
+      left: "4px",
+      right: "4px",
+      zIndex: "2147483647",
+      maxHeight: "48vh",
+      margin: "0",
+      padding: "8px",
+      overflow: "hidden",
+      background:
+        "rgba(20, 10, 35, 0.94)",
+      color: "#fff3a6",
+      font: "9px/1.3 monospace",
+      whiteSpace: "pre-wrap",
+      pointerEvents: "none",
+      borderRadius: "4px"
+    });
+
+    document.body.appendChild(panel);
+
+    let active = false;
+    let bubbleSeen = false;
+    let activeLink = null;
+    let styleHistory = [];
+    const entries = [];
+
+    function value(input) {
+      return input || "-";
+    }
+
+    function htmlSignature() {
+      const html =
+        document.documentElement;
+
+      return [
+        value(html.style.overflow),
+        value(html.style.boxSizing),
+        value(html.style.paddingRight)
+      ].join("/");
+    }
+
+    function addStyleHistory() {
+      const signature = htmlSignature();
+
+      if (
+        styleHistory.at(-1) !==
+          signature
+      ) {
+        styleHistory.push(signature);
+      }
+    }
+
+    function stateLine(
+      label,
+      event,
+      link
+    ) {
+      const html =
+        document.documentElement;
+
+      const htmlComputed =
+        getComputedStyle(html);
+
+      const body =
+        document.body;
+
+      const bodyComputed =
+        getComputedStyle(body);
+
+      const currentLink =
+        link || activeLink;
+
+      const line = [
+        label,
+        "phase=" +
+          (event
+            ? event.eventPhase
+            : "-"),
+        "bubble=" +
+          (bubbleSeen ? "JA" : "NEIN"),
+        "link=" +
+          (currentLink
+            ? value(
+                currentLink.getAttribute(
+                  "fs-scrolldisable-element"
+                )
+              )
+            : "-"),
+        "html.inline=" +
+          htmlSignature(),
+        "html.css=" +
+          htmlComputed.overflowY,
+        "body.inline=" +
+          [
+            value(
+              body.style.position
+            ),
+            value(
+              body.style.overflow
+            ),
+            value(body.style.top)
+          ].join("/"),
+        "body.css=" +
+          bodyComputed.overflowY,
+        "aria=" +
+          value(
+            button.getAttribute(
+              "aria-expanded"
+            )
+          ),
+        "button=" +
+          (button.classList.contains(
+            "w--open"
+          )
+            ? "open"
+            : "closed"),
+        "menu=" +
+          (menu.classList.contains(
+            "w--open"
+          )
+            ? "open"
+            : "closed"),
+        "stopped=" +
+          (event && event.cancelBubble
+            ? "JA"
+            : "NEIN"),
+        "prevented=" +
+          (event &&
+          event.defaultPrevented
+            ? "JA"
+            : "NEIN")
+      ].join(" | ");
+
+      entries.push(line);
+
+      panel.textContent =
+        "NAV-04 DIAGNOSE\n" +
+        entries.slice(-8).join("\n");
+    }
+
+    window.__ffNav04Trace = (
+      label,
+      event,
+      link
+    ) => {
+      if (!active) return;
+
+      activeLink =
+        link || activeLink;
+
+      addStyleHistory();
+      stateLine(
+        label,
+        event,
+        activeLink
+      );
+    };
+
+    window.addEventListener(
+      "click",
+      (event) => {
+        const target =
+          event.target instanceof Element
+            ? event.target
+            : null;
+
+        const link =
+          target
+            ? target.closest("a[href]")
+            : null;
+
+        if (
+          !link ||
+          !menu.contains(link)
+        ) {
+          return;
+        }
+
+        active = true;
+        bubbleSeen = false;
+        activeLink = link;
+        styleHistory = [];
+        entries.length = 0;
+
+        addStyleHistory();
+
+        stateLine(
+          "1 window capture",
+          event,
+          link
+        );
+
+        [0, 50, 150, 500].forEach(
+          (delay) => {
+            setTimeout(() => {
+              addStyleHistory();
+
+              stateLine(
+                "nach " +
+                  delay +
+                  " ms",
+                null,
+                link
+              );
+
+              if (delay === 500) {
+                entries.push(
+                  "ERGEBNIS | window-bubble=" +
+                    (bubbleSeen
+                      ? "JA"
+                      : "NEIN") +
+                    " | html.inline=" +
+                    htmlSignature() +
+                    " | Verlauf=" +
+                    styleHistory.join(" > ")
+                );
+
+                panel.textContent =
+                  "NAV-04 DIAGNOSE\n" +
+                  entries
+                    .slice(-8)
+                    .join("\n");
+
+                setTimeout(() => {
+                  active = false;
+                }, 200);
+              }
+            }, delay);
+          }
+        );
+      },
+      true
+    );
+
+    window.addEventListener(
+      "click",
+      (event) => {
+        if (!active) return;
+
+        const target =
+          event.target instanceof Element
+            ? event.target
+            : null;
+
+        const link =
+          target
+            ? target.closest("a[href]")
+            : null;
+
+        if (
+          !link ||
+          !menu.contains(link)
+        ) {
+          return;
+        }
+
+        bubbleSeen = true;
+        addStyleHistory();
+
+        stateLine(
+          "3 window bubble",
+          event,
+          link
+        );
+      }
+    );
+
+    const htmlObserver =
+      new MutationObserver(() => {
+        if (!active) return;
+
+        addStyleHistory();
+      });
+
+    htmlObserver.observe(
+      document.documentElement,
+      {
+        attributes: true,
+        attributeFilter: ["style"]
+      }
+    );
+
+    panel.textContent =
+      "NAV-04 DIAGNOSE\nBereit";
   });
 })();
