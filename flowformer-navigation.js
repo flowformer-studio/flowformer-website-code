@@ -442,12 +442,8 @@
             return;
           }
 
-          link.setAttribute(
-            "fs-scrolldisable-element",
-            "enable"
-          );
-
           beginClose(false);
+          button.click();
         },
         true
       );
