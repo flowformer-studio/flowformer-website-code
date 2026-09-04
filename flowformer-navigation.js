@@ -442,11 +442,6 @@
             return;
           }
 
-          link.setAttribute(
-            "fs-scrolldisable-element",
-            "enable"
-          );
-
           if (
             typeof window
               .__ffNav04Trace ===
