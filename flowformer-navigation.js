@@ -443,7 +443,7 @@
           }
 
           beginClose(false);
-          button.click();
+          // button.click();
         },
         true
       );
