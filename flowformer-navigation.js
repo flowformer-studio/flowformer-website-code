@@ -44,7 +44,7 @@
 
       const overlay =
         navbar.querySelector(
-          ".navbar_overlay"
+          ".w-nav-overlay"
         );
 
       if (!button || !menu || !overlay) {
@@ -562,7 +562,7 @@
 
     const overlay =
       navbar.querySelector(
-        ".navbar_overlay"
+        ".w-nav-overlay"
       );
 
     if (!button || !menu || !overlay) {
