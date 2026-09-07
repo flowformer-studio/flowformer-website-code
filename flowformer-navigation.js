@@ -51,9 +51,6 @@
         return;
       }
 
-      const overlayDiagnostic =
-        createOverlayDiagnostic(navbar, button, overlay);
-
       overlay.setAttribute(
         "aria-hidden",
         "true"
@@ -426,7 +423,6 @@
             return;
           }
 
-          overlayDiagnostic?.recordHandler();
           beginClose(true);
           button.click();
         }
@@ -530,106 +526,6 @@
       reconcileNativeState();
     }
   });
-
-    /*
-     * NAV-06: observation only; enabled with ?ff-overlay-debug=1.
-     * Remove this helper, its setup call and handler marker after diagnosis.
-     */
-    function createOverlayDiagnostic(navbar, button, overlay) {
-      if (new URLSearchParams(window.location.search)
-          .get("ff-overlay-debug") !== "1") return null;
-
-      const panel = document.createElement("pre");
-      panel.id = "ff-overlay-debug";
-      panel.setAttribute("aria-hidden", "true");
-      Object.assign(panel.style, {
-        position: "fixed", left: "4px", right: "4px", bottom: "4px",
-        zIndex: "2147483647", margin: "0", padding: "8px",
-        background: "rgba(0,0,0,.9)", color: "#fff",
-        font: "11px/1.3 monospace", whiteSpace: "pre-wrap",
-        pointerEvents: "none", maxHeight: "32vh", overflow: "hidden"
-      });
-      document.body.appendChild(panel);
-      let active = false;
-      let sequence = 0;
-      let lines = [];
-      let timer;
-
-      function name(element) {
-        if (!(element instanceof Element)) return "-";
-        return element.tagName.toLowerCase() +
-          (element.id ? "#" + element.id : "") +
-          [...element.classList].map(value => "." + value).join("");
-      }
-      function write(message) {
-        lines.push(message);
-        if (lines.length > 16) lines.splice(1, 1);
-        panel.textContent = lines.join("\n");
-      }
-      function state(label) {
-        write(label + ": aria=" + button.getAttribute("aria-expanded") +
-          " fs=" + (button.getAttribute("fs-scrolldisable-element") || "-"));
-        write("html overflow=" + (document.documentElement.style.overflow || "-") +
-          "/" + getComputedStyle(document.documentElement).overflowY +
-          " body=" + (document.body.style.overflow || "-") +
-          "/" + getComputedStyle(document.body).overflowY);
-      }
-      panel.textContent = "NAV-06 bereit: Menü öffnen, dann Abdunklung antippen.";
-
-      window.addEventListener("click", event => {
-        if (!event.isTrusted) {
-          if (active && event.target === button) {
-            write("Synthetischer Button-Klick: window capture");
-            state("Vor Button-Handler");
-          }
-          return;
-        }
-        clearTimeout(timer);
-        const current = ++sequence;
-        active = true;
-        lines = ["NAV-06 Klick " + current];
-        write("Ziel: " + name(event.target));
-        state("Start");
-        timer = setTimeout(() => {
-          if (sequence !== current) return;
-          state("+700 ms");
-          write("Overlay sichtbar=" +
-            navbar.classList.contains("ff-overlay-visible"));
-          active = false;
-        }, 700);
-      }, true);
-
-      window.addEventListener("click", event => {
-        if (!active) return;
-        write((event.isTrusted ? "Original" : "Synthetisch") +
-          ": window bubble erreicht");
-        state("Nach Klick-Weitergabe");
-      });
-
-      const observer = new MutationObserver(records => {
-        if (!active) return;
-        for (const record of records) {
-          if (record.target === button) {
-            write("Button-Attribut: fs=" +
-              (button.getAttribute("fs-scrolldisable-element") || "-"));
-          } else {
-            write("html style: overflow=" +
-              (document.documentElement.style.overflow || "-"));
-          }
-        }
-      });
-      observer.observe(document.documentElement, {
-        attributes: true, attributeFilter: ["style"]
-      });
-      observer.observe(button, {
-        attributes: true, attributeFilter: ["fs-scrolldisable-element"]
-      });
-      return {
-        recordHandler() {
-          if (active) write("Eigener Overlay-Handler: ausgeführt");
-        }
-      };
-    }
 })();
 /*
  * Temporary navigation diagnostics.
