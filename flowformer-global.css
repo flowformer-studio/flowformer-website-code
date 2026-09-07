@@ -237,15 +237,6 @@ html.ff-pointer .w-tab-link:focus {
    ========================================================================= */
 
 @media screen and (max-width: 991px) {
-  /* Webflow's transparent native overlay must not intercept the custom backdrop click. */
-  .w-nav-overlay {
-    pointer-events: none;
-  }
-
-  .w-nav-overlay .w-nav-menu {
-    pointer-events: auto;
-  }
-
   .navbar_overlay {
     display: none !important;
     position: fixed;
