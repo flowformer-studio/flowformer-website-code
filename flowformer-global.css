@@ -237,8 +237,7 @@ html.ff-pointer .w-tab-link:focus {
    ========================================================================= */
 
 @media screen and (max-width: 991px) {
-  .navbar_overlay {
-    display: none !important;
+  .w-nav-overlay {
     position: fixed;
     inset: 70px 0 0;
     width: 100%;
@@ -248,7 +247,7 @@ html.ff-pointer .w-tab-link:focus {
     transition: opacity 60ms linear;
   }
 
-  .navbar_overlay::before {
+  .w-nav-overlay::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -256,17 +255,17 @@ html.ff-pointer .w-tab-link:focus {
     pointer-events: none;
   }
 
-  .navbar.ff-overlay-mounted
-    .navbar_overlay {
-    display: block !important;
-  }
-
   .navbar.ff-overlay-visible
-    .navbar_overlay {
+    .w-nav-overlay {
     opacity: 1;
     pointer-events: auto;
     transition-duration: 100ms;
     transition-timing-function: ease-out;
+  }
+
+  .w-nav-overlay .w-nav-menu {
+    position: relative;
+    z-index: 1;
   }
 }
 
@@ -275,16 +274,16 @@ html {
 }
 
 @media screen and (min-width: 992px) {
-  .navbar_overlay {
+  .w-nav-overlay {
     display: none !important;
   }
 }
 
 @media screen and (max-width: 991px)
   and (prefers-reduced-motion: reduce) {
-  .navbar_overlay,
+  .w-nav-overlay,
   .navbar.ff-overlay-visible
-    .navbar_overlay {
+    .w-nav-overlay {
     transition: none;
   }
 }
