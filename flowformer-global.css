@@ -237,7 +237,7 @@ html.ff-pointer .w-tab-link:focus {
    ========================================================================= */
 
 @media screen and (max-width: 991px) {
-  .navbar .w-nav-overlay {
+  .w-nav-overlay {
     position: fixed;
     inset: 70px 0 0;
     width: 100%;
