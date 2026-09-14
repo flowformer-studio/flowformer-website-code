@@ -17,11 +17,6 @@
         "(prefers-reduced-motion: reduce)"
       );
 
-    const logoCloseTest =
-      new URLSearchParams(
-        window.location.search
-      ).get("ff-logo-close-test") === "1";
-
     const focusableSelector = [
       "a[href]",
       "button:not([disabled])",
@@ -436,16 +431,6 @@
           }
 
           beginClose(false);
-
-          if (
-            logoCloseTest &&
-            link.hash &&
-            link.origin === window.location.origin &&
-            link.pathname === window.location.pathname
-          ) {
-            return;
-          }
-
           button.click();
         },
         true
