@@ -369,11 +369,6 @@
         }, lockDuration);
       }
 
-      button.setAttribute(
-        "fs-scrolldisable-gap",
-        "false"
-      );
-
       button.addEventListener(
         "click",
         (event) => {
@@ -395,13 +390,6 @@
             event.stopImmediatePropagation();
             return;
           }
-
-          button.setAttribute(
-            "fs-scrolldisable-element",
-            wasOpen
-              ? "enable"
-              : "disable"
-          );
 
           if (
             event.detail > 0 &&
@@ -526,88 +514,74 @@
       reconcileNativeState();
 
       /*
-       * Temporary opt-in test for Finsweet's
-       * visibility-based scroll lock.
-       * Remove after the keyboard test.
+       * Webflows native Overlay-Sichtbarkeit
+       * steuert den Finsweet-Scroll-Lock.
        */
-      if (
-        new URLSearchParams(
-          window.location.search
-        ).get("ff-nav-when-visible-test") ===
-        "1"
-      ) {
-        const testStartedAt =
-          performance.now();
+      const scrollLockStartedAt =
+        performance.now();
 
-        function activateVisibilityTest() {
-          const finsweet =
-            window.FinsweetAttributes;
+      function activateVisibilityScrollLock() {
+        const finsweet =
+          window.FinsweetAttributes;
 
-          const scrollDisable =
-            finsweet?.modules
-              ?.scrolldisable;
+        const scrollDisable =
+          finsweet?.modules
+            ?.scrolldisable;
 
+        if (!scrollDisable?.restart) {
           if (
-            !scrollDisable?.restart
+            performance.now() -
+              scrollLockStartedAt <
+            10000
           ) {
-            if (
-              performance.now() -
-                testStartedAt <
-              10000
-            ) {
-              setTimeout(
-                activateVisibilityTest,
-                50
-              );
-            } else {
-              console.warn(
-                "[FF Overlay-Test] Finsweet-Neustart nicht verfügbar; keine Teständerung."
-              );
-            }
-            return;
-          }
-
-          if (
-            finsweet.version !==
-              "2.7.1" ||
-            nativeOpen()
-          ) {
-            console.warn(
-              "[FF Overlay-Test] Version unerwartet oder Menü bereits offen; keine Teständerung.",
-              finsweet.version
+            setTimeout(
+              activateVisibilityScrollLock,
+              50
             );
-            return;
+          } else {
+            console.warn(
+              "[FF Navigation] Finsweet-Scroll-Lock nicht verfügbar."
+            );
           }
-
-          overlay.setAttribute(
-            "fs-scrolldisable-element",
-            "when-visible"
-          );
-
-          overlay.setAttribute(
-            "fs-scrolldisable-gap",
-            "false"
-          );
-
-          Promise.resolve(
-            scrollDisable.restart()
-          ).then(
-            () => {
-              console.info(
-                "[FF Overlay-Test] aktiv: native Fläche steuert Finsweet when-visible. Ohne URL-Parameter bleibt alles unverändert."
-              );
-            },
-            (error) => {
-              console.error(
-                "[FF Overlay-Test] Neustart fehlgeschlagen; Seite ohne Testparameter neu laden.",
-                error
-              );
-            }
-          );
+          return;
         }
 
-        activateVisibilityTest();
+        if (finsweet.version !== "2.7.1") {
+          console.warn(
+            "[FF Navigation] Unerwartete Finsweet-Version; Scroll-Lock nicht aktiviert.",
+            finsweet.version
+          );
+          return;
+        }
+
+        button.removeAttribute(
+          "fs-scrolldisable-element"
+        );
+        button.removeAttribute(
+          "fs-scrolldisable-gap"
+        );
+
+        overlay.setAttribute(
+          "fs-scrolldisable-element",
+          "when-visible"
+        );
+
+        overlay.setAttribute(
+          "fs-scrolldisable-gap",
+          "false"
+        );
+
+        Promise.resolve(
+          scrollDisable.restart()
+        ).catch((error) => {
+          console.error(
+            "[FF Navigation] Finsweet-Scroll-Lock konnte nicht gestartet werden.",
+            error
+          );
+        });
       }
+
+      activateVisibilityScrollLock();
     }
   });
 })();
