@@ -524,6 +524,90 @@
       );
 
       reconcileNativeState();
+
+      /*
+       * Temporary opt-in test for Finsweet's
+       * visibility-based scroll lock.
+       * Remove after the keyboard test.
+       */
+      if (
+        new URLSearchParams(
+          window.location.search
+        ).get("ff-nav-when-visible-test") ===
+        "1"
+      ) {
+        const testStartedAt =
+          performance.now();
+
+        function activateVisibilityTest() {
+          const finsweet =
+            window.FinsweetAttributes;
+
+          const scrollDisable =
+            finsweet?.modules
+              ?.scrolldisable;
+
+          if (
+            !scrollDisable?.restart
+          ) {
+            if (
+              performance.now() -
+                testStartedAt <
+              10000
+            ) {
+              setTimeout(
+                activateVisibilityTest,
+                50
+              );
+            } else {
+              console.warn(
+                "[FF Overlay-Test] Finsweet-Neustart nicht verfügbar; keine Teständerung."
+              );
+            }
+            return;
+          }
+
+          if (
+            finsweet.version !==
+              "2.7.1" ||
+            nativeOpen()
+          ) {
+            console.warn(
+              "[FF Overlay-Test] Version unerwartet oder Menü bereits offen; keine Teständerung.",
+              finsweet.version
+            );
+            return;
+          }
+
+          overlay.setAttribute(
+            "fs-scrolldisable-element",
+            "when-visible"
+          );
+
+          overlay.setAttribute(
+            "fs-scrolldisable-gap",
+            "false"
+          );
+
+          Promise.resolve(
+            scrollDisable.restart()
+          ).then(
+            () => {
+              console.info(
+                "[FF Overlay-Test] aktiv: native Fläche steuert Finsweet when-visible. Ohne URL-Parameter bleibt alles unverändert."
+              );
+            },
+            (error) => {
+              console.error(
+                "[FF Overlay-Test] Neustart fehlgeschlagen; Seite ohne Testparameter neu laden.",
+                error
+              );
+            }
+          );
+        }
+
+        activateVisibilityTest();
+      }
     }
   });
 })();
