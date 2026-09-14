@@ -431,7 +431,19 @@
           }
 
           beginClose(false);
-          button.click();
+
+          // Logo-Test: Abschnittslinks ohne zusätzlichen Buttonklick.
+          const targetUrl =
+            new URL(link.href, window.location.href);
+          const isSamePageSection =
+            targetUrl.origin === window.location.origin &&
+            targetUrl.pathname === window.location.pathname &&
+            targetUrl.search === window.location.search &&
+            targetUrl.hash.length > 1;
+
+          if (!isSamePageSection) {
+            button.click();
+          }
         },
         true
       );
