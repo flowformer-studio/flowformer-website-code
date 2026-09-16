@@ -239,7 +239,7 @@ html.ff-pointer .w-tab-link:focus {
 @media screen and (max-width: 991px) {
   .w-nav-overlay {
     position: fixed;
-    inset: 70px 0 0;
+    inset: var(--_ui-styles---navbar-height) 0 0;
     width: 100%;
     background-color: rgba(18, 19, 21, 0.5) !important;
     opacity: 0;
