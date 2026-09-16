@@ -241,7 +241,7 @@ html.ff-pointer .w-tab-link:focus {
     position: fixed;
     inset: var(--_ui-styles---navbar-height) 0 0;
     width: 100%;
-    background-color: rgba(18, 19, 21, 0.5) !important;
+    background-color: transparent !important;
     opacity: 0;
     pointer-events: none;
     transition: opacity 60ms linear;
@@ -249,6 +249,7 @@ html.ff-pointer .w-tab-link:focus {
 
   .navbar.ff-overlay-visible
     .w-nav-overlay {
+    background-color: rgba(18, 19, 21, 0.5) !important;
     opacity: 1;
     pointer-events: auto;
     transition-duration: 100ms;
