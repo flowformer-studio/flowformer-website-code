@@ -247,10 +247,6 @@ html.ff-pointer .w-tab-link:focus {
     transition: opacity 60ms linear;
   }
 
-  .navbar:not(.ff-overlay-mounted) .w-nav-overlay {
-    display: none !important;
-  }
-
   .navbar.ff-overlay-visible
     .w-nav-overlay {
     opacity: 1;
