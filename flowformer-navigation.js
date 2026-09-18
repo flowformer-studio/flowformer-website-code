@@ -12,6 +12,11 @@
         "(max-width: 991px)"
       );
 
+    const reducedMotion =
+      window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      );
+
     const focusableSelector = [
       "a[href]",
       "button:not([disabled])",
@@ -67,6 +72,7 @@
       let returnFocusOnClose = true;
       let locked = false;
       let lockTimer;
+      let unmountTimer;
       let openViewportWidth = null;
 
       const inertStates = new Map();
@@ -213,6 +219,23 @@
       }
 
       function openEnhancedState() {
+        clearTimeout(unmountTimer);
+
+        navbar.classList.add(
+          "ff-overlay-mounted"
+        );
+
+        /*
+         * Startet die Opacity-Transition
+         * unmittelbar und unabhängig
+         * vom MutationObserver.
+         */
+        overlay.getBoundingClientRect();
+
+        navbar.classList.add(
+          "ff-overlay-visible"
+        );
+
         if (enhancedOpen) return;
 
         enhancedOpen = true;
@@ -244,6 +267,30 @@
       function closeEnhancedState(
         returnFocus
       ) {
+        navbar.classList.remove(
+          "ff-overlay-visible"
+        );
+
+        clearTimeout(unmountTimer);
+
+        const delay =
+          reducedMotion.matches
+            ? 0
+            : 60;
+
+        unmountTimer =
+          setTimeout(() => {
+            if (
+              !navbar.classList.contains(
+                "ff-overlay-visible"
+              )
+            ) {
+              navbar.classList.remove(
+                "ff-overlay-mounted"
+              );
+            }
+          }, delay);
+
         if (!enhancedOpen) return;
 
         enhancedOpen = false;
