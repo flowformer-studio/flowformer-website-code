@@ -415,9 +415,7 @@
       });
 
       function getViewportWidth() {
-        return window.visualViewport
-          ? window.visualViewport.width
-          : window.innerWidth;
+        return window.innerWidth;
       }
 
       function closeNavigationOnViewportChange() {
