@@ -159,7 +159,7 @@
           event.preventDefault();
 
           beginClose(true);
-          button.click();
+          closeNativeMenu();
 
           return;
         }
@@ -287,6 +287,20 @@
         );
       }
 
+      function closeNativeMenu() {
+        // Webflows Button-Klick schaltet verzögert um und könnte nach
+        // dem Desktopwechsel ein bereits geschlossenes Menü öffnen.
+        // Der native Escape-Handler schließt ausschließlich und sofort.
+        const $ = window.jQuery;
+        $(button).triggerHandler(
+          $.Event("keydown.w-nav", {
+            key: "Escape",
+            keyCode: 27,
+            which: 27
+          })
+        );
+      }
+
       function reconcileNativeState() {
         if (!tabletDown.matches) {
           closing = false;
@@ -367,7 +381,7 @@
           }
 
           beginClose(true);
-          button.click();
+          closeNativeMenu();
         }
       );
 
@@ -397,7 +411,7 @@
             targetUrl.hash.length > 1;
 
           if (!isSamePageSection) {
-            button.click();
+            closeNativeMenu();
           }
         },
         true
@@ -442,7 +456,7 @@
         }
 
         beginClose(false);
-        button.click();
+        closeNativeMenu();
       }
 
       function releaseScrollOnDesktop() {
@@ -453,6 +467,13 @@
           scrollUnlockButton.click();
         }
       }
+
+      // Webflow meldet den Abschluss erst nach dem Zurücksetzen des
+      // Overlays; auch dann die iOS-Touchsperre explizit freigeben.
+      window.jQuery(navbar).on(
+        "w-close.ff-navigation",
+        releaseScrollOnDesktop
+      );
 
       window.addEventListener(
         "resize",
