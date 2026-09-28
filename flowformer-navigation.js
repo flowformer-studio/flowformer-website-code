@@ -68,6 +68,7 @@
       let locked = false;
       let lockTimer;
       let openViewportWidth = null;
+      let scrollUnlockButton = null;
 
       const inertStates = new Map();
 
@@ -415,13 +416,15 @@
       });
 
       function getViewportWidth() {
-        return window.visualViewport
-          ? window.visualViewport.width
-          : window.innerWidth;
+        // Die Scrollsperre darf keinen Größenwechsel vortäuschen.
+        return window.innerWidth;
       }
 
       function closeNavigationOnViewportChange() {
         if (
+          !tabletDown.matches ||
+          closing ||
+          !button.classList.contains("w--open") ||
           !nativeOpen() ||
           openViewportWidth === null
         ) {
@@ -442,38 +445,29 @@
         button.click();
       }
 
-      window.addEventListener(
-        "resize",
-        closeNavigationOnViewportChange,
-        {
-          capture: true,
-          passive: true
+      function releaseScrollOnDesktop() {
+        if (
+          !tabletDown.matches &&
+          scrollUnlockButton
+        ) {
+          scrollUnlockButton.click();
         }
-      );
-
-      if (window.visualViewport) {
-        window.visualViewport
-          .addEventListener(
-            "resize",
-            closeNavigationOnViewportChange,
-            {
-              capture: true,
-              passive: true
-            }
-          );
       }
 
       window.addEventListener(
-        "orientationchange",
+        "resize",
+        closeNavigationOnViewportChange,
+        { passive: true }
+      );
+
+      tabletDown.addEventListener(
+        "change",
         () => {
-          if (nativeOpen()) {
-            beginClose(false);
-            button.click();
+          if (!tabletDown.matches) {
+            // Webflow schließt die Navbar beim Desktopwechsel selbst.
+            reconcileNativeState();
+            releaseScrollOnDesktop();
           }
-        },
-        {
-          capture: true,
-          passive: true
         }
       );
 
@@ -537,9 +531,27 @@
           "false"
         );
 
+        // Finsweet 2.7.1 überspringt außerhalb des Navbar-Breakpoints
+        // die Sichtbarkeitsprüfung einschließlich der Scrollfreigabe.
+        // Die vorgesehene Enable-Aktion löst auch die iOS-Touchsperre.
+        if (!scrollUnlockButton) {
+          scrollUnlockButton =
+            document.createElement("button");
+          scrollUnlockButton.type = "button";
+          scrollUnlockButton.hidden = true;
+          scrollUnlockButton.tabIndex = -1;
+          scrollUnlockButton.setAttribute(
+            "fs-scrolldisable-element",
+            "enable"
+          );
+          menu.appendChild(scrollUnlockButton);
+        }
+
         Promise.resolve(
           scrollDisable.restart()
-        ).catch((error) => {
+        ).then(() => {
+          releaseScrollOnDesktop();
+        }).catch((error) => {
           console.error(
             "[FF Navigation] Finsweet-Scroll-Lock konnte nicht gestartet werden.",
             error
