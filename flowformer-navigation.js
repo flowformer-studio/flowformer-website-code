@@ -68,8 +68,6 @@
       let locked = false;
       let lockTimer;
       let openViewportWidth = null;
-      let openWindowWidth = null;
-      let openClientWidth = null;
 
       const inertStates = new Map();
 
@@ -221,9 +219,6 @@
         enhancedOpen = true;
         openViewportWidth =
           getViewportWidth();
-        openWindowWidth = window.innerWidth;
-        openClientWidth =
-          document.documentElement.clientWidth;
 
         setOutsideInert(true);
 
@@ -254,8 +249,6 @@
 
         enhancedOpen = false;
         openViewportWidth = null;
-        openWindowWidth = null;
-        openClientWidth = null;
 
         setOutsideInert(false);
 
@@ -435,34 +428,9 @@
           return;
         }
 
-        const currentViewportWidth =
-          getViewportWidth();
-
-        // Opening the scroll lock can remove the scrollbar
-        // without changing the actual window width.
-        const scrollbarOnly =
-          openWindowWidth !== null &&
-          openClientWidth !== null &&
-          openWindowWidth - openClientWidth > 1 &&
-          Math.abs(
-            openViewportWidth - openClientWidth
-          ) <= 1 &&
-          Math.abs(
-            window.innerWidth - openWindowWidth
-          ) <= 1 &&
-          Math.abs(
-            currentViewportWidth - openWindowWidth
-          ) <= 1;
-
-        if (scrollbarOnly) {
-          openViewportWidth = currentViewportWidth;
-          openClientWidth = openWindowWidth;
-          return;
-        }
-
         const widthChanged =
           Math.abs(
-            currentViewportWidth -
+            getViewportWidth() -
               openViewportWidth
           ) > 1;
 
