@@ -49,18 +49,18 @@ select:-moz-autofill {
    FlowFormer – Forms (moved from Webflow before </body>)
    ========================================================================= */
 
-/* Rot erst NACH "Weiter"-Versuch (ff-show-errors) – nur pro Feldwrapper */
+/* Fehlerrahmen und Fehlerschatten für Felder im Vorab-Check.
+   Voraussetzung: Fehleranzeige des Schritts ist freigegeben
+   und der Feldwrapper oder seine Fehlermeldung markiert einen Fehler. */
 [sf-step].ff-show-errors :is(.form_field-wrapper, .multi-form18_field-wrapper).ff-has-error .form_input,
 [sf-step].ff-show-errors :is(.form_field-wrapper, .multi-form18_field-wrapper).ff-has-error textarea,
-[sf-step].ff-show-errors :is(.form_field-wrapper, .multi-form18_field-wrapper).ff-has-error select {
-  border-color: #E5484D !important;
-  box-shadow: 0 0 0 1px rgba(229, 72, 77, 0.12) !important;
-}
-
-/* FIX: :has() nur auf Feld-Wrapper, nicht auf den großen form_field-wrapper */
+[sf-step].ff-show-errors :is(.form_field-wrapper, .multi-form18_field-wrapper).ff-has-error select,
 [sf-step].ff-show-errors .multi-form18_field-wrapper:has(.form-error-text[style*="display: block"]) .form_input,
 [sf-step].ff-show-errors .multi-form18_field-wrapper:has(.form-error-text[style*="display: block"]) textarea,
-[sf-step].ff-show-errors .multi-form18_field-wrapper:has(.form-error-text[style*="display: block"]) select {
+[sf-step].ff-show-errors .multi-form18_field-wrapper:has(.form-error-text[style*="display: block"]) select,
+[sf-step].ff-show-errors .multi-form18_field-wrapper:has(.form-error-text[style*="display: block"]) input.w-input,
+[sf-step].ff-show-errors .multi-form18_field-wrapper:has(.form-error-text[style*="display: block"]) textarea.w-input,
+[sf-step].ff-show-errors .multi-form18_field-wrapper:has(.form-error-text[style*="display: block"]) select.w-select {
   border-color: #E5484D !important;
   box-shadow: 0 0 0 1px rgba(229, 72, 77, 0.12) !important;
 }
