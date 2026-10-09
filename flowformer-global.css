@@ -94,11 +94,9 @@ select:-moz-autofill {
   opacity:1;
 }
 
-/* =================================
-   DIREKTER KONTAKT – Error States
-   (robust: unabhängig von Input-Klassen)
-================================= */
-
+/* Direkter Kontakt: Fehlerrahmen und Fehlerschatten für Eingabefelder.
+   Voraussetzung: Fehleranzeige des Schritts ist freigegeben
+   und der Feldwrapper ist als fehlerhaft markiert. */
 .contact-form_step.ff-show-errors
   .contactform_field-wrapper.ff-has-error
   :is(input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]),
@@ -108,9 +106,10 @@ select:-moz-autofill {
   box-shadow: 0 0 0 1px rgba(229, 72, 77, 0.12) !important;
 }
 
-/* Checkbox: nur Icon */
+/* Direkter Kontakt: Bei fehlender Datenschutz-Zustimmung
+   nur das Checkbox-Kästchen als fehlerhaft darstellen. */
 .contact-form_step.ff-show-errors
-  .contactform_field-wrapper.ff-has-error
+  .contact-form_checkbox.ff-has-error
   .form_checkbox-icon {
   border: 1px solid #E5484D !important;
   box-shadow: 0 0 0 1px rgba(229, 72, 77, 0.12) !important;
@@ -163,34 +162,6 @@ select.w-select {
 select.w-select.ff-has-value {
   color: var(--_primitives---basic-colors--neutral-darkest);
 }
-
-/* =================================
-   DIREKTER KONTAKT – Error States
-   (nur Contact-Form, nicht Multistep)
-================================= */
-
-.contact-form_step.ff-show-errors
-  .contactform_field-wrapper.ff-has-error
-  input,
-.contact-form_step.ff-show-errors
-  .contactform_field-wrapper.ff-has-error
-  textarea,
-.contact-form_step.ff-show-errors
-  .contactform_field-wrapper.ff-has-error
-  select {
-  border-color: #E5484D !important;
-  box-shadow: 0 0 0 1px rgba(229, 72, 77, 0.12) !important;
-}
-
-/* Checkbox: nur das Icon rot (Wrapper ist bei dir .contact-form_checkbox) */
-.contact-form_step.ff-show-errors
-  .contact-form_checkbox.ff-has-error
-  .form_checkbox-icon {
-  border: 1px solid #E5484D !important;
-  box-shadow: 0 0 0 1px rgba(229, 72, 77, 0.12) !important;
-}
-
-
 
 /* ===== FlowFormer – Focus-Ring nur für Tastatur (iPhone Ring weg) ===== */
 html.ff-pointer .w-tab-link:focus {
