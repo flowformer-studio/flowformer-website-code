@@ -259,9 +259,3 @@ html {
     display: none !important;
   }
 }
-
-/* Vorab-Check – sichtbarer Tastaturfokus auf der gesamten Auswahlkarte */
-[sf="flowformer-vorabcheck"] .goals-group .checkbox:has(input:focus-visible) {
-  outline: 1px solid #000;
-  outline-offset: 0;
-}
