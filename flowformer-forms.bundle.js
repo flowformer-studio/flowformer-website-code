@@ -547,8 +547,10 @@ document.addEventListener("DOMContentLoaded", function () {
   document.addEventListener(
     "click",
     function (e) {
-      if (!e.target.closest('[sf-reset="true"]')) return;
-      document.querySelectorAll("[sf-step].ff-show-errors").forEach((s) => s.classList.remove("ff-show-errors"));
+      const btn = e.target.closest('[sf-reset="true"]');
+      const resetScope = btn && btn.closest('[data-ff-form="vorabcheck"]');
+      if (!resetScope) return;
+      resetScope.querySelectorAll("[sf-step].ff-show-errors").forEach((s) => s.classList.remove("ff-show-errors"));
     },
     true
   );
@@ -990,7 +992,8 @@ document.addEventListener("DOMContentLoaded", () => {
     "click",
     function (e) {
       const btn = e.target.closest('[sf-reset="true"]');
-      if (!btn) return;
+      const resetScope = btn && btn.closest('[data-ff-form="vorabcheck"]');
+      if (!resetScope) return;
 
       const wrapper = document.querySelector('[sf="flowformer-vorabcheck"]');
       if (!wrapper) return;
@@ -1020,18 +1023,19 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // Bereinigung auf den Vorab-Check begrenzen; Kontaktdaten erhalten.
       setTimeout(() => {
-        wrapper.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach((i) => {
+        resetScope.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach((i) => {
           i.checked = false;
           i.disabled = false;
           i.dispatchEvent(new Event("change", { bubbles: true }));
         });
 
-        wrapper.querySelectorAll(".w-checkbox-input, .w-radio-input").forEach((el) => {
+        resetScope.querySelectorAll(".w-checkbox-input, .w-radio-input").forEach((el) => {
           el.classList.remove("w--redirected-checked", "w--redirected-focus");
         });
 
-        wrapper
+        resetScope
           .querySelectorAll(
             'input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="hidden"]), textarea'
           )
@@ -1039,20 +1043,20 @@ document.addEventListener("DOMContentLoaded", () => {
             i.value = "";
           });
 
-        wrapper.querySelectorAll("select").forEach((sel) => {
+        resetScope.querySelectorAll("select").forEach((sel) => {
           sel.value = "";
           sel.selectedIndex = 0;
           sel.dispatchEvent(new Event("change", { bubbles: true }));
         });
 
-        wrapper.querySelectorAll('input[type="submit"]').forEach((sub) => {
+        resetScope.querySelectorAll('input[type="submit"]').forEach((sub) => {
           if (!sub.value) sub.value = sub.defaultValue || sub.getAttribute("value") || "Vorab-Check Anfrage absenden";
         });
 
-        const otherWrapper = wrapper.querySelector('[data-ff-goal-other-wrapper="true"]');
+        const otherWrapper = resetScope.querySelector('[data-ff-goal-other-wrapper="true"]');
         if (otherWrapper) otherWrapper.style.display = "none";
 
-        wrapper.querySelectorAll("[sf-step].ff-show-errors").forEach((s) => s.classList.remove("ff-show-errors"));
+        resetScope.querySelectorAll("[sf-step].ff-show-errors").forEach((s) => s.classList.remove("ff-show-errors"));
       }, 220);
 
       setTimeout(() => {
