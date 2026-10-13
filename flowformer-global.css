@@ -74,25 +74,8 @@ select:-moz-autofill {
 /* "Etwas anderes" Wrapper standardmäßig aus (wird per JS bei Bedarf eingeblendet) */
 [data-ff-goal-other-wrapper="true"] { display: none; }
 
-/* (ALT) Wrapper muss "Anker" für Overlay sein */
+/* Formularcontainer: Positionierungs- und Stapelkontext. */
 [sf="flowformer-vorabcheck"] { position: relative; isolation: isolate; }
-
-/* (ALT) Overlay (standard: unsichtbar) */
-[sf="flowformer-vorabcheck"]::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:#fff;
-  opacity:0;
-  pointer-events:none;
-  transition:opacity 220ms ease;
-  z-index:9999;
-}
-
-/* (ALT) Beim Reset kurz sichtbar */
-[sf="flowformer-vorabcheck"].ff-resetting::after{
-  opacity:1;
-}
 
 /* Direkter Kontakt: Fehlerrahmen und Fehlerschatten für Eingabefelder.
    Voraussetzung: Fehleranzeige des Schritts ist freigegeben
