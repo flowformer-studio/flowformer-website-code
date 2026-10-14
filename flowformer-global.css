@@ -162,20 +162,6 @@ html.ff-pointer .w-tab-link:focus {
 }
 
 /* ==========================================================================
-   FLOWFORMER – Scoped Submit Notices
-   Fix: Vorab-Check-Fail-State darf die Notice im Direkter-Kontakt-Tab nicht öffnen.
-   Greift gezielt auf #contact-form und überschreibt die breite .ff-submit-notice-Regel.
-   ========================================================================= */
-
-[sf="flowformer-vorabcheck"][data-ff-submit-failed="1"] #contact-form [data-ff-submit-notice="direct-contact"].ff-submit-notice {
-  display: none !important;
-}
-
-[sf="flowformer-vorabcheck"][data-ff-submit-failed="1"] [data-ff-submit-notice="vorabcheck"].ff-submit-notice {
-  display: block !important;
-}
-
-/* ==========================================================================
    Vorab-Check – Ziele: deaktivierter Weiter-Button
    ========================================================================= */
 
