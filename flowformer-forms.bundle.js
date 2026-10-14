@@ -1,6 +1,7 @@
 /* ==========================================================================
-   FlowFormer – Forms Bundle - v2026-02-13-05
-   Aus Webflow "Before </body>" ausgelagert (JS only)
+   FlowFormer – Forms Bundle
+   JavaScript für Formulare und ergänzende Seitenfunktionen.
+   Enthält CSS-Regeln zur Einblendung der Erfolgsmeldungen.
    ========================================================================= */
 
 /* ==========================================================================
