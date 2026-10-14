@@ -691,12 +691,12 @@ document.addEventListener("DOMContentLoaded", () => {
       contactStep
     );
 
-    if (company) lines.push(`- Unternehmen: ${company}`);
     if (fullName) lines.push(`- Vor-/Nachname: ${fullName}`);
+    if (company) lines.push(`- Unternehmen: ${company}`);
     if (website) lines.push(`- Webseite: ${website}`);
     if (email) lines.push(`- E-Mail-Adresse: ${email}`);
 
-    lines.push("", "Bitte um Kontaktaufnahme.");
+    lines.push("", "Ich freue mich über Ihre Rückmeldung.");
 
     const body = encodeURIComponent(lines.join("\n"));
     return `mailto:${EMAIL_TO}?subject=${subject}&body=${body}`;
