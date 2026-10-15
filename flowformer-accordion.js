@@ -1,4 +1,4 @@
-/* FlowFormer FAQ — prepared integration, not deployed.
+/* FlowFormer FAQ — FAQ integration.
  * Native Webflow: height 0 → auto and icon; odd clicks play, even reverse.
  * Remove the native Body Text action and the previous item click trigger.
  * Both native actions: start 0, duration 0.5 seconds, no trigger delay.
@@ -60,7 +60,9 @@
       state.texts.forEach(text => {
         const split = SplitText.create(text, {
           type: 'lines', mask: 'lines', aria: 'none',
-          linesClass: 'ff-accordion-line'
+          linesClass: 'ff-accordion-line',
+          // Preserve browser wrap opportunities after hyphens without changing text.
+          wordDelimiter: { delimiter: /(?=\s)|(?<=[\s-])/, replaceWith: '' }
         });
         state.splits.push(split);
         lines.push(...split.lines);
