@@ -3,12 +3,12 @@
  * Remove the native Body Text action and the previous item click trigger.
  * Both native actions: start 0, duration 0.5 seconds, no trigger delay.
  * Native reduced-motion condition: skip to end (not disable interaction).
- * Text values below reproduce the existing opacity-only SplitText action.
+ * Text staggering is bounded to match the native 0.5-second animation.
  */
 (() => {
   'use strict';
 
-  const settings = { duration: 0.5, stagger: 0.1, ease: 'power1.out' };
+  const settings = { totalDuration: 0.5, staggerAmount: 0.2, ease: 'power1.out' };
   const initialized = new WeakSet();
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const states = new Set();
@@ -69,7 +69,7 @@
       });
 
       if (!lines.length) {
-        state.animation = gsap.delayedCall(settings.duration, () => finish(state, token));
+        state.animation = gsap.delayedCall(settings.totalDuration, () => finish(state, token));
         return;
       }
 
@@ -77,8 +77,8 @@
         { opacity: state.open ? 0 : 1 },
         {
           opacity: state.open ? 1 : 0,
-          duration: settings.duration,
-          stagger: settings.stagger,
+          duration: lines.length > 1 ? settings.totalDuration - settings.staggerAmount : settings.totalDuration,
+          stagger: { amount: settings.staggerAmount },
           ease: settings.ease,
           onComplete: () => finish(state, token)
         }
