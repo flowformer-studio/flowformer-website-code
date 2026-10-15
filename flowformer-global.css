@@ -200,7 +200,7 @@ html {
   }
 }
 
-/* FlowFormer – FAQ: dezente Antipp-Markierung in Safari */
+/* FlowFormer – FAQ: Safari-Antipp-Markierung deaktivieren */
 .accordion_trigger {
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.06);
+  -webkit-tap-highlight-color: transparent;
 }
