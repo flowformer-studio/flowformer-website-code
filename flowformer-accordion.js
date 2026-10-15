@@ -80,7 +80,7 @@
         {
           opacity: state.open ? 1 : 0,
           duration: lines.length > 1 ? settings.totalDuration - settings.staggerAmount : settings.totalDuration,
-          stagger: { amount: settings.staggerAmount, from: state.open ? 'end' : 'start' },
+          stagger: { amount: settings.staggerAmount, from: state.open ? 'start' : 'end' },
           ease: settings.ease,
           onComplete: () => finish(state, token)
         }
