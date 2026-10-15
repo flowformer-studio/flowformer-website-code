@@ -36,6 +36,8 @@
 
   function finish(state, token) {
     if (state.token !== token) return;
+    // Hide the collapsed panel before restoring its original text layout.
+    if (!state.open) state.panel.hidden = true;
     state.splits.forEach(split => split.revert());
     state.splits = [];
     state.animation = null;
@@ -78,7 +80,7 @@
         {
           opacity: state.open ? 1 : 0,
           duration: lines.length > 1 ? settings.totalDuration - settings.staggerAmount : settings.totalDuration,
-          stagger: { amount: settings.staggerAmount },
+          stagger: { amount: settings.staggerAmount, from: state.open ? 'end' : 'start' },
           ease: settings.ease,
           onComplete: () => finish(state, token)
         }
@@ -91,6 +93,11 @@
   }
 
   function onClick(state) {
+    // Keep the visible height stable while closing text is rebuilt.
+    // The native Webflow interaction still owns the height tween.
+    if (state.open && !state.panel.hidden) {
+      state.panel.style.height = `${state.panel.getBoundingClientRect().height}px`;
+    }
     cancelText(state);
     state.open = !state.open;
     state.button.setAttribute('aria-expanded', String(state.open));
