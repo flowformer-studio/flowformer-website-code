@@ -97,6 +97,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function clearFieldError(fieldEl) {
+    // Checkbox-/Radiofehler werden über ihre eigene Auswahlvalidierung behandelt.
+    if (fieldEl?.matches?.('input[type="checkbox"], input[type="radio"]')) return;
+
     const wrap = getFieldWrapper(fieldEl);
     if (!wrap) return;
     const errEl = wrap.querySelector(".form-error-text");
@@ -435,6 +438,9 @@ document.addEventListener("DOMContentLoaded", () => {
     return el?.closest?.(".form_field-wrapper, .multi-form18_field-wrapper") || null;
   }
   function hideError(el) {
+    // Checkbox-/Radiofehler werden über ihre eigene Auswahlvalidierung behandelt.
+    if (el?.matches?.('input[type="checkbox"], input[type="radio"]')) return;
+
     const wrap = getWrap(el);
     if (!wrap) return;
 
@@ -1189,6 +1195,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function setErrorForField(fieldEl, show) {
+    // Checkbox-/Radiofehler werden über ihre eigene Auswahlvalidierung behandelt.
+    if (fieldEl?.matches?.('input[type="checkbox"], input[type="radio"]')) return;
+
     const wrap = utils.getFieldWrapper(fieldEl);
     if (!wrap) return;
 
