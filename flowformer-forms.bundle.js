@@ -1951,3 +1951,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 })();
+
+
+/* ==========================================================================
+   (16) Formularfelder – Keyboard-Outline von Maus/Touch trennen
+   Eigener Modus: bestehende ff-pointer-/Tab-Logik bleibt unverändert.
+   ========================================================================== */
+(() => {
+  const root = document.documentElement;
+  const setPointerMode = () => root.classList.add("ff-fields-pointer");
+
+  window.addEventListener("pointerdown", setPointerMode, true);
+  window.addEventListener("mousedown", setPointerMode, true);
+  window.addEventListener("touchstart", setPointerMode, { capture: true, passive: true });
+  window.addEventListener("keydown", (event) => {
+    // Schreiben, Enter und Leertaste ändern die vorherige Bedienart nicht.
+    if (event.key === "Tab" && !event.ctrlKey && !event.altKey && !event.metaKey) {
+      root.classList.remove("ff-fields-pointer");
+    }
+  }, true);
+})();

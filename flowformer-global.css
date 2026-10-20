@@ -157,6 +157,16 @@ html.ff-pointer .w-tab-link:focus {
   outline: auto;
 }
 
+/* Formularfelder: Webflows Keyboard-Outline bei Maus/Touch ausblenden.
+   Feldrahmen und Fehlerschatten bleiben unverändert. Ohne JS bleibt
+   die native :focus-visible-Anzeige als Rückfall erhalten. */
+html.ff-fields-pointer
+  :is([sf="flowformer-vorabcheck"], .contact-form_step)
+  :is(input.form_input-2, select.form_input-2,
+      textarea.form_input.is-text-area, textarea.contactform_textarea):focus {
+  outline-style: none !important;
+}
+
 @media (max-width: 767px) {
   #forms-anchor { scroll-margin-top: 60px; }
 }
