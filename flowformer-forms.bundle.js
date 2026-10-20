@@ -415,6 +415,12 @@ function goalsValid() {
   });
 
   if (privacyCheckbox) {
+    privacyCheckbox.addEventListener("focus", function () {
+      // Nur die eigene Datenschutzmeldung bereinigen, nicht fremde Feldfehler.
+      const wrapper = getFieldWrapper(privacyCheckbox);
+      setError(wrapper, privacyErrorText, false);
+    });
+
     privacyCheckbox.addEventListener("change", function () {
       if (privacyCheckbox.checked) {
         const wrapper = getFieldWrapper(privacyCheckbox);
