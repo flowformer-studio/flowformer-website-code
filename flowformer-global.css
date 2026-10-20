@@ -98,6 +98,12 @@ select:-moz-autofill {
   box-shadow: 0 0 0 1px rgba(229, 72, 77, 0.12) !important;
 }
 
+/* Vorab-Check: Keyboard-Fokus um die gesamte Auswahlkarte */
+[sf="flowformer-vorabcheck"] .goals-group .checkbox:has(input[type="checkbox"]:focus-visible) {
+  outline: 2px solid var(--_ui-styles---keyboard--focus-ring, #5996E7);
+  outline-offset: 2px;
+}
+
 /* Vorab-Check: Checkbox-Karten — Hintergrund und Border bleiben, wenn ausgewählt */
 [sf="flowformer-vorabcheck"] .goals-group .checkbox:has(input[type="checkbox"]:checked) {
   background-color: var(--_primitives---primary--corpo-50-10);
