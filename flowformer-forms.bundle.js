@@ -298,6 +298,22 @@ function goalsValid() {
     null;
 
   const privacySubmitButton = formWrapper.querySelector('[data-ff-privacy-submit="true"]');
+
+  // Verborgene letzte Schritte dürfen keine Absendevalidierung auslösen.
+  function blockHiddenStepSubmit(event) {
+    const isSubmitClick = event.type === "click" && event.target === privacySubmitButton;
+    const isFormSubmit = event.type === "submit" && event.target === form;
+    if (!isSubmitClick && !isFormSubmit) return;
+
+    const submitStep = privacySubmitButton?.closest("[sf-step]");
+    if (!submitStep || getComputedStyle(submitStep).display !== "none") return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }
+
+  window.addEventListener("click", blockHiddenStepSubmit, true);
+  form.addEventListener("submit", blockHiddenStepSubmit, true);
   const selects = Array.from(formWrapper.querySelectorAll('select[data-ff-status-select="true"]'));
 
   // Placeholder nach Auswahl nicht mehr anwählbar
