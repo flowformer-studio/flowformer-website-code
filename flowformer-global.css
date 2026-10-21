@@ -158,11 +158,6 @@ html.ff-pointer .w-tab-link:focus {
   box-shadow: none !important;
 }
 
-/* wenn Browser :focus-visible kann -> Tastatur darf Ring sehen */
-.w-tab-link:focus-visible {
-  outline: auto;
-}
-
 /* Formularfelder: Webflows Keyboard-Outline bei Maus/Touch ausblenden.
    Feldrahmen und Fehlerschatten bleiben unverändert. Ohne JS bleibt
    die native :focus-visible-Anzeige als Rückfall erhalten. */
